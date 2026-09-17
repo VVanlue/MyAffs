@@ -1,0 +1,7 @@
+Flask>=3.0,<4.0
+flask-cors>=4.0,<5.0
+
+# If you wire in a real model, add whatever it needs here, e.g.:
+# TTS>=0.22        # Coqui TTS
+# torch>=2.0        # most trained models will need this
+# soundfile>=0.12

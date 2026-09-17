@@ -1,0 +1,1956 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MyAffs.</title>
+<meta name="description" content="Craft your own custom subliminal audio — affirmations, frequencies, isochronic tones and music, layered your way.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%8C%BF%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,500;0,6..96,600;0,6..96,700;1,6..96,500;1,6..96,600;1,6..96,700&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ============================= TOKENS ============================= */
+:root{
+  --moss:#4C7A4A;
+  --moss-deep:#33553A;
+  --fern:#7FB06B;
+  --sun:#E8A93A;
+  --sun-soft:#F0C665;
+  --sky:#6FAFC9;
+  --lavender:#A488C7;
+  --rose:#E68FA0;
+  --blush:#DE968E;
+  --cream:#F2E9D2;
+  --cream-deep:#E9DBB8;
+  --ink:#2A3527;
+  --ink-soft:#57624E;
+  --paper:#F1E8CF;
+  --paper-deep:#E6D9B4;
+  --glass:rgba(233,223,190,0.45);
+  --glass-tint:rgba(200,215,195,0.35);
+  --glass-edge:rgba(255,255,255,0.55);
+  --shadow-soft:0 10px 40px rgba(56,48,20,0.18);
+  --radius-lg:28px;
+  --radius-md:18px;
+  --radius-sm:12px;
+  --font-display:'Bodoni Moda', serif;
+  --font-body:'Quicksand', sans-serif;
+  --shine-x:-30%;
+  --vine-svg:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='44' height='18' viewBox='0 0 44 18'%3E%3Cpath d='M2 9 Q11 1 22 9 T42 9' stroke='%23B79FD1' stroke-width='1.1' fill='none' stroke-linecap='round'/%3E%3Ccircle cx='11' cy='6' r='1.3' fill='%23E8A93A'/%3E%3Ccircle cx='33' cy='12' r='1.3' fill='%23E8A93A'/%3E%3C/svg%3E");
+}
+
+.icon{width:1em;height:1em;display:inline-block;vertical-align:-0.15em;flex-shrink:0;}
+*{box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  margin:0;
+  font-family:var(--font-body);
+  color:var(--ink);
+  background:var(--cream);
+  overflow-x:hidden;
+  -webkit-font-smoothing:antialiased;
+}
+h1,h2,h3,.display{
+  font-family:var(--font-display);
+  font-weight:600;
+  font-style:italic;
+  letter-spacing:0.3px;
+  margin:0;
+  color:var(--ink);
+}
+p{line-height:1.65;color:var(--ink-soft);margin:0;}
+button{font-family:var(--font-body);cursor:pointer;}
+a{color:inherit;}
+:focus-visible{outline:3px solid var(--lavender);outline-offset:3px;border-radius:6px;}
+[hidden]{display:none !important;}
+
+@media (prefers-reduced-motion: reduce){
+  *{animation-duration:0.001ms !important; animation-iteration-count:1 !important; transition-duration:0.001ms !important; scroll-behavior:auto !important;}
+}
+
+/* ============================= AMBIENT LAYERS ============================= */
+#sun-glow{
+  position:fixed; inset:0; pointer-events:none; z-index:0;
+  background:
+    radial-gradient(600px 600px at var(--sx,50%) var(--sy,10%), rgba(246,217,141,0.55), transparent 60%);
+  transition:background-position 0.2s linear;
+  mix-blend-mode:multiply;
+}
+#rainbow-streak{
+  position:absolute; left:0; right:0; top:180vh; height:60vh; pointer-events:none; z-index:1;
+  opacity:0.28;
+  background:conic-gradient(from 200deg at 50% 40%,
+    #f6b6c1, #f6d98d, #cdeab0, #a9d8e6, #c3b6ea, #f2b6d4, #f6b6c1);
+  filter:blur(60px);
+  mix-blend-mode:overlay;
+}
+#sparkles{position:fixed; inset:0; pointer-events:none; z-index:2; overflow:hidden;}
+.sparkle{
+  position:absolute; width:6px; height:6px; border-radius:50%;
+  background:radial-gradient(circle, #fff, rgba(255,255,255,0));
+  opacity:0; animation:twinkle linear infinite;
+}
+@keyframes twinkle{
+  0%{opacity:0; transform:translateY(0) scale(0.6);}
+  10%{opacity:0.9;}
+  90%{opacity:0.4;}
+  100%{opacity:0; transform:translateY(-120px) scale(1.1);}
+}
+
+/* ============================= NAV ============================= */
+#top-nav{
+  position:fixed; top:0; left:0; right:0; z-index:50;
+  display:flex; align-items:center; justify-content:space-between;
+  padding:18px clamp(18px,4vw,48px);
+  backdrop-filter:blur(14px);
+  background:linear-gradient(rgba(251,246,234,0.75), rgba(251,246,234,0.35));
+  border-bottom:1px solid rgba(255,255,255,0.4);
+}
+.logo{
+  font-family:var(--font-display); font-size:1.5rem; font-weight:600; color:var(--moss-deep);
+  display:flex; align-items:center; gap:8px; letter-spacing:0.3px;
+}
+.logo-mark{font-size:1.3rem;}
+.btn{
+  position:relative; border:none; border-radius:20px; padding:13px 27px; font-weight:700; font-size:0.95rem;
+  transition:transform 0.18s ease, box-shadow 0.18s ease, background 0.2s ease;
+  display:inline-flex; align-items:center; gap:8px; white-space:nowrap; overflow:visible;
+  isolation:isolate;
+}
+.btn::before{
+  content:""; position:absolute; inset:-5px -8px; border-radius:24px;
+  transform:skewX(-11deg); z-index:-1; opacity:0.55;
+  background:linear-gradient(135deg, var(--rose), var(--sun), var(--lavender));
+}
+.btn::after{
+  content:""; position:absolute; inset:0; border-radius:inherit; padding:1.5px;
+  background-image:var(--vine-svg); background-repeat:repeat; background-size:38px 16px;
+  -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite:xor; mask-composite:exclude;
+  opacity:0.6; pointer-events:none;
+}
+.btn:active{transform:translateY(1px) scale(0.98);}
+.btn-primary{
+  color:#fff; background:linear-gradient(135deg, var(--moss), var(--moss-deep) 70%, var(--fern));
+  box-shadow:0 8px 24px rgba(51,85,58,0.4);
+}
+.btn-primary:hover{transform:translateY(-2px); box-shadow:0 12px 30px rgba(51,85,58,0.45);}
+.btn-ghost{
+  background:linear-gradient(160deg, rgba(255,252,240,0.55), rgba(224,212,172,0.5));
+  color:var(--moss-deep); border:1px solid var(--glass-edge);
+  backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px);
+}
+.btn-ghost:hover{background:linear-gradient(160deg, rgba(255,252,240,0.75), rgba(224,212,172,0.6));}
+.btn-sun{
+  color:#432B08; background:linear-gradient(135deg, var(--sun-soft), var(--sun) 60%, var(--rose));
+  box-shadow:0 8px 22px rgba(232,169,58,0.45);
+}
+.btn-sun:hover{transform:translateY(-2px);}
+.btn:disabled{opacity:0.45; cursor:not-allowed; transform:none;}
+.btn:disabled::before{display:none;}
+
+#bottom-cta{
+  position:fixed; bottom:22px; left:50%; transform:translateX(-50%); z-index:50;
+}
+
+/* user menu */
+#user-chip{
+  position:relative;
+}
+#user-icon-btn{
+  width:46px; height:46px; border-radius:50%; border:2px solid var(--glass-edge);
+  background:linear-gradient(135deg, var(--lavender), var(--sky));
+  color:#fff; font-family:var(--font-display); font-weight:600; font-size:1.05rem;
+  display:flex; align-items:center; justify-content:center; box-shadow:var(--shadow-soft);
+}
+#user-dropdown{
+  position:absolute; right:0; top:56px; width:220px; background:var(--paper);
+  border-radius:var(--radius-md); box-shadow:var(--shadow-soft); border:1px solid rgba(0,0,0,0.05);
+  padding:14px; display:flex; flex-direction:column; gap:6px;
+}
+#user-dropdown .uname{font-family:var(--font-display); font-size:1.05rem; padding:4px 6px 10px; border-bottom:1px solid #eee2c8; margin-bottom:4px;}
+#user-dropdown button{
+  background:none; border:none; text-align:left; padding:9px 8px; border-radius:10px; font-size:0.92rem; color:var(--ink-soft); font-weight:600;
+}
+#user-dropdown button:hover{background:var(--cream-deep); color:var(--ink);}
+
+/* ============================= LANDING ============================= */
+main{position:relative; z-index:3;}
+section{position:relative;}
+
+.hero{
+  min-height:100vh; display:flex; flex-direction:column; align-items:center; justify-content:center;
+  text-align:center; padding:120px 20px 80px; background:
+    radial-gradient(ellipse 80% 60% at 50% 0%, rgba(246,217,141,0.5), transparent 70%),
+    linear-gradient(180deg, var(--cream), #F7F0DC);
+}
+.hero .eyebrow-mark{font-size:2.6rem; margin-bottom:6px;}
+.hero h1{
+  font-size:clamp(2.8rem, 7.5vw, 5.6rem); line-height:1.03; max-width:16ch; font-weight:700;
+  background:linear-gradient(100deg, var(--moss-deep) 4%, var(--moss) 22%, var(--sun) 42%, var(--rose) 58%, var(--lavender) 74%, var(--moss-deep) 96%);
+  background-size:180% 100%;
+  -webkit-background-clip:text; background-clip:text; color:transparent;
+  filter:drop-shadow(0 3px 22px rgba(232,169,58,0.35));
+  animation:hero-shift 9s ease-in-out infinite;
+}
+@keyframes hero-shift{
+  0%,100%{background-position:0% 50%;}
+  50%{background-position:100% 50%;}
+}
+.hero .sub{
+  margin-top:26px; font-size:1.2rem; max-width:44ch; color:var(--ink-soft);
+}
+.hero-actions{margin-top:42px; display:flex; gap:16px; flex-wrap:wrap; justify-content:center;}
+.hero-note{margin-top:20px; font-size:0.85rem; color:var(--ink-soft); opacity:0.8;}
+
+.scroll-hint{
+  margin-top:70px; display:flex; flex-direction:column; align-items:center; gap:8px; opacity:0.6;
+  animation:bob 2.4s ease-in-out infinite;
+}
+@keyframes bob{0%,100%{transform:translateY(0);}50%{transform:translateY(10px);}}
+
+/* Tutorial */
+#tutorial{padding:40px 20px 20px;}
+.tut-intro{max-width:640px; margin:0 auto 30px; text-align:center;}
+.tut-intro h2{font-size:clamp(1.8rem,4vw,2.6rem);}
+.step{
+  max-width:920px; margin:0 auto; min-height:66vh; display:flex; align-items:center; gap:60px;
+  padding:60px 24px;
+}
+.step:nth-child(even){flex-direction:row-reverse;}
+.step-visual{
+  flex:0 0 220px; height:220px; border-radius:32px; display:flex; align-items:center; justify-content:center;
+  font-size:4rem; position:relative; box-shadow:var(--shadow-soft);
+}
+.step-text{flex:1;}
+.step-text .step-label{font-family:var(--font-display); font-style:italic; font-size:0.95rem; color:var(--moss); margin-bottom:6px; display:block;}
+.step-text h3{font-size:1.7rem; margin-bottom:10px;}
+.step-text p{font-size:1.02rem; max-width:38ch;}
+.step[data-bg="1"] .step-visual{background:linear-gradient(135deg,#DDEBCB,#B9D9A0);}
+.step[data-bg="2"] .step-visual{background:linear-gradient(135deg,#FCE7B4,#F0B84E);}
+.step[data-bg="3"] .step-visual{background:linear-gradient(135deg,#CDE7EF,#8FC4D9);}
+.step[data-bg="4"] .step-visual{background:linear-gradient(135deg,#E5D8F4,#B79FD1);}
+.step[data-bg="5"] .step-visual{background:linear-gradient(135deg,#F7D2CE,#E9A6A0);}
+
+/* Donate landing */
+#landing-donate{
+  margin:60px auto 40px; max-width:760px; padding:44px clamp(20px,5vw,56px); border-radius:var(--radius-lg);
+  background:var(--glass); border:1px solid var(--glass-edge); backdrop-filter:blur(14px); box-shadow:var(--shadow-soft);
+  text-align:center;
+}
+#landing-donate h3{font-size:1.5rem; margin-bottom:12px;}
+#landing-donate p{max-width:52ch; margin:0 auto 22px;}
+
+.landing-final{padding:60px 20px 160px; text-align:center;}
+.landing-final h2{font-size:clamp(1.8rem,4vw,2.4rem); margin-bottom:22px;}
+
+footer.site-footer{text-align:center; padding:30px; color:var(--ink-soft); font-size:0.85rem;}
+
+/* ============================= AUTH ============================= */
+#view-auth{
+  min-height:100vh; display:flex; align-items:center; justify-content:center; padding:140px 20px 60px;
+  background:radial-gradient(ellipse 70% 50% at 50% 0%, rgba(183,159,209,0.35), transparent 70%), var(--cream);
+}
+.auth-card{
+  width:100%; max-width:420px; background:var(--paper); border-radius:var(--radius-lg); box-shadow:var(--shadow-soft);
+  padding:38px clamp(26px,5vw,42px); border:1px solid rgba(255,255,255,0.6);
+}
+.auth-card h2{font-size:1.9rem; text-align:center; margin-bottom:6px;}
+.auth-sub{text-align:center; margin-bottom:26px; font-size:0.92rem;}
+.auth-tabs{display:flex; background:var(--cream-deep); border-radius:999px; padding:5px; margin-bottom:24px;}
+.auth-tabs button{
+  flex:1; border:none; background:none; padding:10px; border-radius:999px; font-weight:700; font-size:0.9rem; color:var(--ink-soft);
+  transition:all 0.2s ease;
+}
+.auth-tabs button.active{background:#fff; color:var(--moss-deep); box-shadow:0 3px 10px rgba(0,0,0,0.08);}
+.field{margin-bottom:16px;}
+.field label{display:block; font-size:0.82rem; font-weight:700; color:var(--ink-soft); margin-bottom:6px;}
+.field input{
+  width:100%; padding:13px 15px; border-radius:var(--radius-sm); border:1.5px solid #E7DFC8; font-size:0.98rem;
+  background:#FFFEFA; font-family:var(--font-body); color:var(--ink); transition:border 0.2s ease;
+}
+.field input:focus{border-color:var(--moss); outline:none;}
+.field-error{color:#B5473E; font-size:0.8rem; margin-top:5px; min-height:1em;}
+.auth-msg{font-size:0.85rem; text-align:center; min-height:1.2em; margin-bottom:8px; color:#B5473E;}
+.auth-submit{width:100%; justify-content:center; padding:14px; font-size:1rem; margin-top:6px;}
+.auth-divider{display:flex; align-items:center; gap:12px; margin:22px 0; color:var(--ink-soft); font-size:0.8rem;}
+.auth-divider::before,.auth-divider::after{content:"";flex:1;height:1px;background:#E7DFC8;}
+.btn-guest{width:100%; justify-content:center; padding:13px;}
+.back-home{display:block; text-align:center; margin-top:20px; font-size:0.85rem; color:var(--ink-soft); text-decoration:underline; background:none; border:none; width:100%;}
+
+/* ============================= APP ============================= */
+#view-app{padding:110px clamp(16px,4vw,40px) 60px; max-width:980px; margin:0 auto;}
+.app-header{text-align:center; margin-bottom:44px;}
+.app-header h2{font-size:clamp(1.9rem,4vw,2.5rem);}
+.app-header p{margin-top:10px; max-width:48ch; margin-inline:auto;}
+
+.panel{
+  background:var(--paper); border-radius:var(--radius-lg); box-shadow:var(--shadow-soft);
+  padding:clamp(22px,4vw,34px); margin-bottom:34px; border:1px solid rgba(255,255,255,0.6);
+}
+.panel-title{display:flex; align-items:center; gap:10px; margin-bottom:6px;}
+.panel-title h3{font-size:1.4rem;}
+.panel-sub{margin-bottom:22px; font-size:0.92rem;}
+
+/* layer box */
+.layer{
+  position:relative; border-radius:var(--radius-md); border:2px solid #ECE3C8; background:#FFFEFA;
+  margin-bottom:18px; overflow:visible; transition:border-color 0.25s ease, background 0.25s ease;
+}
+.layer.has-text{border-color:#D7CBA0;}
+.layer.locked{background:#F6F1E1; border-color:var(--fern);}
+.layer-head{display:flex; align-items:center; justify-content:space-between; padding:10px 16px 0;}
+.layer-num{font-family:var(--font-display); font-style:italic; font-size:0.95rem; color:var(--moss);}
+.layer-controls{display:flex; align-items:center; gap:6px; min-height:32px;}
+.icon-btn{
+  width:34px; height:34px; border-radius:50%; border:none; background:rgba(140,160,120,0.12);
+  display:flex; align-items:center; justify-content:center; color:var(--moss-deep); font-size:1.05rem;
+  opacity:0; transform:scale(0.7); transition:opacity 0.3s ease, transform 0.3s ease, background 0.2s ease;
+  position:relative;
+}
+.icon-btn.show{opacity:1; transform:scale(1);}
+.icon-btn:hover{background:rgba(140,160,120,0.25);}
+.icon-badge{
+  position:absolute; bottom:-6px; right:-6px; background:var(--sun); color:#4a3200; font-size:0.6rem; font-weight:800;
+  border-radius:8px; padding:1px 4px; line-height:1.3;
+}
+.spinner{
+  width:22px; height:22px; border-radius:50%; border:3px solid #E4DBBF; border-top-color:var(--moss);
+  animation:spin 0.8s linear infinite; opacity:0; transition:opacity 0.2s ease;
+}
+.spinner.show{opacity:1;}
+@keyframes spin{to{transform:rotate(360deg);}}
+.layer textarea{
+  width:100%; border:none; background:transparent; resize:vertical; min-height:110px; padding:14px 18px 8px;
+  font-family:var(--font-body); font-size:1.05rem; color:rgba(46,59,43,0.38); line-height:1.6;
+  transition:color 0.2s ease;
+}
+.layer textarea.typed{color:var(--ink);}
+.layer textarea:disabled{color:var(--ink); opacity:0.92; cursor:default;}
+.layer-foot{display:flex; align-items:center; justify-content:flex-end; gap:12px; padding:6px 16px 16px;}
+.char-count{font-size:0.75rem; color:var(--ink-soft); margin-right:auto;}
+.save-layer-btn{padding:10px 20px; font-size:0.88rem;}
+.locked-tag{
+  font-size:0.78rem; font-weight:700; color:var(--moss-deep); background:rgba(143,191,123,0.25);
+  padding:5px 12px; border-radius:999px; display:none; align-items:center; gap:5px;
+}
+.layer.locked .locked-tag{display:inline-flex;}
+.layer.locked .save-layer-btn{display:none;}
+
+#add-layer-btn{margin-top:4px;}
+.layer-limit-msg{font-size:0.82rem; color:var(--ink-soft); margin-top:8px;}
+
+/* AI topic helper */
+.ai-row{
+  display:flex; gap:10px; flex-wrap:wrap; align-items:center; background:var(--cream-deep);
+  border-radius:var(--radius-sm); padding:12px 14px; margin-bottom:18px;
+}
+.ai-row input{
+  flex:1; min-width:180px; border:1.5px solid #E7DFC8; border-radius:var(--radius-sm); padding:10px 13px;
+  font-family:var(--font-body); font-size:0.92rem; background:#fff;
+}
+.ai-row .btn{padding:10px 18px; font-size:0.85rem;}
+
+/* popovers */
+.popover{
+  position:absolute; z-index:80; background:#fff; border-radius:var(--radius-md); box-shadow:var(--shadow-soft);
+  padding:18px 20px; width:250px; border:1px solid rgba(0,0,0,0.06);
+}
+.popover h4{font-size:0.95rem; margin-bottom:12px; display:flex; justify-content:space-between; align-items:center;}
+.popover .close-pop{background:none; border:none; font-size:1rem; color:var(--ink-soft); padding:2px 6px;}
+.popover input[type="range"]{width:100%; accent-color:var(--moss);}
+.popover .pop-value{text-align:center; font-family:var(--font-display); font-size:1.3rem; color:var(--moss-deep); margin-top:6px;}
+.popover-overlay{position:fixed; inset:0; z-index:70; background:transparent;}
+
+/* overlay tabs */
+.tabs{display:flex; gap:8px; margin-bottom:20px; flex-wrap:wrap;}
+.tab-btn{
+  padding:10px 20px; border-radius:999px; border:1.5px solid #ECE3C8; background:#fff; font-weight:700; font-size:0.88rem; color:var(--ink-soft);
+  transition:all 0.2s ease;
+}
+.tab-btn.active{background:var(--moss); color:#fff; border-color:var(--moss);}
+.overlay-list{display:flex; flex-direction:column; gap:10px;}
+.overlay-row{
+  display:flex; align-items:center; gap:14px; background:#FFFEFA; border:1.5px solid #ECE3C8; border-radius:var(--radius-sm);
+  padding:10px 14px;
+}
+.play-btn{
+  width:40px; height:40px; flex:0 0 40px; border-radius:50%; border:none; background:linear-gradient(135deg,var(--fern),var(--moss));
+  color:#fff; display:flex; align-items:center; justify-content:center; font-size:1rem; position:relative;
+}
+.play-btn .ring{position:absolute; inset:-3px; border-radius:50%; border:2px solid var(--moss); opacity:0;}
+.play-btn.playing .ring{opacity:1; animation:pulse-ring 1.2s ease-in-out infinite;}
+@keyframes pulse-ring{0%{transform:scale(0.9);opacity:0.7;}100%{transform:scale(1.25);opacity:0;}}
+.overlay-name{flex:1; font-weight:600; font-size:0.98rem;}
+.overlay-sub{display:block; font-size:0.78rem; font-weight:500; color:var(--ink-soft);}
+.add-btn{
+  padding:9px 18px; border-radius:999px; border:1.5px solid var(--moss); background:#fff; color:var(--moss-deep);
+  font-weight:700; font-size:0.85rem; min-width:96px; transition:all 0.2s ease;
+}
+.add-btn.added{background:var(--moss); color:#fff; border-color:var(--moss);}
+
+/* summary */
+#summary-panel{background:linear-gradient(180deg,#FBF6EA,#F2E9CE);}
+.summary-block h4{font-size:1rem; margin-bottom:12px; color:var(--moss-deep);}
+.summary-item{
+  display:flex; align-items:center; gap:12px; padding:10px 14px; background:#fff; border-radius:var(--radius-sm);
+  margin-bottom:8px; font-size:0.92rem; border:1px solid #EFE7CF;
+}
+.summary-item .tag{
+  font-size:0.72rem; font-weight:800; padding:3px 9px; border-radius:999px; background:var(--cream-deep); color:var(--moss-deep);
+}
+.summary-empty{font-size:0.88rem; color:var(--ink-soft); font-style:italic; padding:6px 0 16px;}
+
+/* save tape / CD */
+#save-tape-wrap{text-align:center; margin-top:28px; position:relative; min-height:70px;}
+#save-tape-btn{padding:16px 40px; font-size:1.02rem;}
+.tape-note{font-size:0.82rem; color:var(--ink-soft); margin-top:10px;}
+
+#cd-stage{
+  display:none; flex-direction:column; align-items:center; padding:30px 0 10px; position:relative;
+}
+#cd-stage.show{display:flex;}
+#cd-disc{
+  width:220px; height:220px; border-radius:50%; position:relative;
+  background:conic-gradient(from 90deg, #d9dee0, #fff 15%, #cdd3d6 30%, #fff 45%, #d9dee0 60%, #fff 75%, #cdd3d6 90%, #d9dee0);
+  box-shadow:0 20px 50px rgba(0,0,0,0.25), inset 0 0 0 10px rgba(255,255,255,0.5);
+  animation:cd-spin 2.4s linear infinite;
+}
+#cd-stage.fast #cd-disc{animation-duration:0.5s;}
+@keyframes cd-spin{to{transform:rotate(360deg);}}
+#cd-disc::before{
+  content:""; position:absolute; inset:0; border-radius:50%;
+  background:conic-gradient(from 0deg, rgba(255,180,220,0.35), rgba(180,220,255,0.35), rgba(220,255,180,0.35), rgba(255,220,150,0.35), rgba(255,180,220,0.35));
+  mix-blend-mode:screen; opacity:0.8;
+}
+#cd-disc::after{
+  content:""; position:absolute; top:50%; left:50%; width:46px; height:46px; border-radius:50%;
+  background:var(--cream); transform:translate(-50%,-50%); box-shadow:0 0 0 4px #bbb inset;
+}
+#cd-download-btn{
+  position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); z-index:5;
+  padding:12px 22px; font-size:0.85rem; display:none; align-items:center; gap:7px;
+}
+#cd-download-btn.show{display:inline-flex;}
+#cd-status{
+  margin-top:22px; font-family:var(--font-display); font-style:italic; font-size:1.15rem; color:var(--moss-deep);
+  min-height:1.6em; opacity:0; transition:opacity 0.6s ease;
+}
+#cd-status.show{opacity:1;}
+
+/* modal (donate) */
+.modal-overlay{
+  position:fixed; inset:0; z-index:200; background:rgba(46,59,43,0.55); backdrop-filter:blur(4px);
+  display:flex; align-items:center; justify-content:center; padding:20px; opacity:0; transition:opacity 0.3s ease;
+}
+.modal-overlay.show{opacity:1;}
+.modal-box{
+  background:var(--paper); border-radius:var(--radius-lg); max-width:460px; width:100%; padding:36px 32px;
+  text-align:center; box-shadow:0 30px 80px rgba(0,0,0,0.35); transform:translateY(16px); transition:transform 0.3s ease;
+}
+.modal-overlay.show .modal-box{transform:translateY(0);}
+.modal-box .mark{font-size:2.4rem; margin-bottom:10px;}
+.modal-box h3{font-size:1.5rem; margin-bottom:12px;}
+.modal-box p{margin-bottom:22px; font-size:0.95rem;}
+.modal-actions{display:flex; flex-direction:column; gap:12px;}
+.modal-actions .btn{justify-content:center;}
+.link-later{background:none; border:none; color:var(--ink-soft); font-size:0.85rem; text-decoration:underline; padding:6px;}
+
+/* toast */
+#toast{
+  position:fixed; bottom:100px; left:50%; transform:translateX(-50%) translateY(20px); z-index:300;
+  background:var(--ink); color:#fff; padding:13px 24px; border-radius:999px; font-size:0.9rem; font-weight:600;
+  opacity:0; pointer-events:none; transition:all 0.3s ease; box-shadow:0 10px 30px rgba(0,0,0,0.25);
+}
+#toast.show{opacity:1; transform:translateX(-50%) translateY(0);}
+
+/* ============================= PROFILE ============================= */
+#view-profile{padding:120px clamp(16px,4vw,40px) 60px; max-width:1000px; margin:0 auto;}
+.profile-grid{display:grid; grid-template-columns:1fr 320px; gap:30px; align-items:start;}
+@media (max-width:820px){.profile-grid{grid-template-columns:1fr;}}
+.profile-main{background:var(--paper); border-radius:var(--radius-lg); box-shadow:var(--shadow-soft); padding:32px;}
+.profile-id{display:flex; align-items:center; gap:16px; margin-bottom:26px;}
+.profile-avatar{
+  width:64px; height:64px; border-radius:50%; background:linear-gradient(135deg,var(--lavender),var(--sky));
+  color:#fff; font-family:var(--font-display); font-size:1.6rem; display:flex; align-items:center; justify-content:center;
+}
+.tape-card{
+  border:1.5px solid #ECE3C8; border-radius:var(--radius-sm); padding:16px 18px; margin-bottom:12px; background:#FFFEFA;
+}
+.tape-card .tname{font-weight:700; font-size:1rem; margin-bottom:4px;}
+.tape-card .tmeta{font-size:0.8rem; color:var(--ink-soft);}
+.empty-state{font-size:0.92rem; color:var(--ink-soft); font-style:italic; text-align:center; padding:30px 0;}
+.sidebar-card{
+  background:linear-gradient(160deg,#EFE4F7,#DCEFF3); border-radius:var(--radius-lg); padding:26px; box-shadow:var(--shadow-soft);
+  position:sticky; top:110px;
+}
+.sidebar-card h4{font-size:1.1rem; margin-bottom:12px;}
+.sidebar-card p{font-size:0.88rem; margin-bottom:18px; color:var(--ink);}
+#logout-btn-main{margin-top:26px;}
+
+/* ============================= GLASS / SUNLIGHT SHINE (wins cascade — placed last) ============================= */
+.panel, .auth-card, .tape-card, .sidebar-card, .layer, .step-visual{
+  position:relative; overflow:hidden;
+  background:linear-gradient(160deg, rgba(255,252,240,0.6), rgba(224,212,172,0.45));
+  backdrop-filter:blur(18px) saturate(150%);
+  -webkit-backdrop-filter:blur(18px) saturate(150%);
+  box-shadow:var(--shadow-soft), inset 0 1px 0 rgba(255,255,255,0.5);
+}
+.panel::after, .auth-card::after, .tape-card::after, .sidebar-card::after, .layer::after, .step-visual::after{
+  content:""; position:absolute; top:-60%; left:var(--shine-x); width:55%; height:220%;
+  background:linear-gradient(75deg, transparent 28%, rgba(255,255,255,0.55) 47%, rgba(255,238,196,0.4) 53%, transparent 74%);
+  transform:rotate(9deg); pointer-events:none; mix-blend-mode:overlay; z-index:2;
+}
+.step-visual{background:none; backdrop-filter:none; -webkit-backdrop-filter:none;}
+#top-nav{
+  background:linear-gradient(rgba(242,233,210,0.8), rgba(242,233,210,0.4));
+}
+
+/* generic */
+.section-divider{height:1px; background:linear-gradient(90deg,transparent,#E2D6AE,transparent); margin:0 auto 34px; max-width:600px;}
+.sr-only{position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0,0,0,0);}
+@media (max-width:640px){
+  .step{flex-direction:column !important; text-align:center; gap:26px;}
+  .step-text p{margin-inline:auto;}
+  #top-nav .btn span.lbl{display:none;}
+}
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+<defs>
+
+<symbol id="icon-leaf" viewBox="0 0 24 24">
+  <path d="M5 19C4 12 8 4 20 4C20 14 13 20 5 19Z" fill="#7FB06B"/>
+  <path d="M5 19C4 12 8 4 20 4" fill="none" stroke="#4C7A4A" stroke-width="1.1" stroke-linecap="round"/>
+  <path d="M7 17C10 13 13 9 18 6" fill="none" stroke="#EAF3E2" stroke-width="1.1" stroke-linecap="round"/>
+</symbol>
+
+<symbol id="icon-sparkle" viewBox="0 0 24 24">
+  <path d="M12 2C12.6 7 15 9.4 20 10C15 10.6 12.6 13 12 18C11.4 13 9 10.6 4 10C9 9.4 11.4 7 12 2Z" fill="#E8A93A"/>
+  <circle cx="19" cy="19" r="2" fill="#E68FA0"/>
+  <circle cx="4.5" cy="18" r="1.2" fill="#A488C7"/>
+</symbol>
+
+<symbol id="icon-mic" viewBox="0 0 24 24">
+  <rect x="9" y="3" width="6" height="11" rx="3" fill="#A488C7"/>
+  <path d="M6 11C6 15 8.7 17.5 12 17.5C15.3 17.5 18 15 18 11" fill="none" stroke="#6B5590" stroke-width="1.4" stroke-linecap="round"/>
+  <line x1="12" y1="17.5" x2="12" y2="21" stroke="#6B5590" stroke-width="1.4" stroke-linecap="round"/>
+  <line x1="8.5" y1="21" x2="15.5" y2="21" stroke="#6B5590" stroke-width="1.4" stroke-linecap="round"/>
+  <circle cx="10.6" cy="6.5" r="0.8" fill="#EFE6F7"/>
+</symbol>
+
+<symbol id="icon-wave" viewBox="0 0 24 24">
+  <path d="M2 15C5 10 7 20 10 15C13 10 15 20 18 15C19.5 12.5 21 13.5 22 15" fill="none" stroke="#6FAFC9" stroke-width="1.8" stroke-linecap="round"/>
+  <path d="M2 10C5 5 7 15 10 10C13 5 15 15 18 10C19.5 7.5 21 8.5 22 10" fill="none" stroke="#B9DEE9" stroke-width="1.4" stroke-linecap="round"/>
+</symbol>
+
+<symbol id="icon-magnify" viewBox="0 0 24 24">
+  <circle cx="10.5" cy="10.5" r="6.5" fill="#F0C665" fill-opacity="0.5" stroke="#E8A93A" stroke-width="1.6"/>
+  <line x1="15.2" y1="15.2" x2="20.5" y2="20.5" stroke="#8A5A18" stroke-width="2" stroke-linecap="round"/>
+</symbol>
+
+<symbol id="icon-disc" viewBox="0 0 24 24">
+  <circle cx="12" cy="12" r="10" fill="#E7E2D6"/>
+  <circle cx="12" cy="12" r="10" fill="none" stroke="#C9C1AC" stroke-width="1"/>
+  <path d="M2 12A10 10 0 0 1 12 2" stroke="#E68FA0" stroke-width="1.6" fill="none" stroke-linecap="round" opacity="0.7"/>
+  <path d="M22 12A10 10 0 0 1 12 22" stroke="#6FAFC9" stroke-width="1.6" fill="none" stroke-linecap="round" opacity="0.7"/>
+  <circle cx="12" cy="12" r="3" fill="#F2E9D2"/>
+  <circle cx="12" cy="12" r="1.1" fill="#9A927C"/>
+</symbol>
+
+<symbol id="icon-flower" viewBox="0 0 24 24">
+  <g fill="#E68FA0">
+    <ellipse cx="12" cy="6" rx="3.1" ry="4"/>
+    <ellipse cx="12" cy="18" rx="3.1" ry="4"/>
+    <ellipse cx="6" cy="12" rx="4" ry="3.1"/>
+    <ellipse cx="18" cy="12" rx="4" ry="3.1"/>
+  </g>
+  <circle cx="12" cy="12" r="3.4" fill="#E8A93A"/>
+</symbol>
+
+<symbol id="icon-cup" viewBox="0 0 24 24">
+  <path d="M4 9H16V15C16 18 13.5 20 10 20C6.5 20 4 18 4 15V9Z" fill="#DE968E"/>
+  <path d="M16 10H18.5C19.9 10 21 11.1 21 12.5C21 13.9 19.9 15 18.5 15H16" fill="none" stroke="#B5695F" stroke-width="1.5"/>
+  <path d="M7 5C6 6 8 7 7 8" fill="none" stroke="#B5695F" stroke-width="1.2" stroke-linecap="round"/>
+  <path d="M11 4C10 5 12 6 11 7" fill="none" stroke="#B5695F" stroke-width="1.2" stroke-linecap="round"/>
+</symbol>
+
+<symbol id="icon-wand" viewBox="0 0 24 24">
+  <line x1="4" y1="20" x2="15" y2="9" stroke="#A488C7" stroke-width="2.4" stroke-linecap="round"/>
+  <path d="M17.5 3.5L18.6 6.1L21.2 7L18.6 7.9L17.5 10.5L16.4 7.9L13.8 7L16.4 6.1Z" fill="#E8A93A"/>
+  <circle cx="7" cy="6" r="1" fill="#E68FA0"/>
+  <circle cx="20" cy="15" r="0.9" fill="#6FAFC9"/>
+</symbol>
+
+<symbol id="icon-rainbow" viewBox="0 0 24 24">
+  <path d="M2 18A10 10 0 0 1 22 18" fill="none" stroke="#E68FA0" stroke-width="2"/>
+  <path d="M4.2 18A7.8 7.8 0 0 1 19.8 18" fill="none" stroke="#F0C665" stroke-width="2"/>
+  <path d="M6.4 18A5.6 5.6 0 0 1 17.6 18" fill="none" stroke="#7FB06B" stroke-width="2"/>
+  <path d="M8.6 18A3.4 3.4 0 0 1 15.4 18" fill="none" stroke="#6FAFC9" stroke-width="2"/>
+</symbol>
+
+<symbol id="icon-play" viewBox="0 0 24 24">
+  <path d="M7 4.8C7 3.9 8 3.4 8.8 3.9L19.5 10.9C20.2 11.4 20.2 12.6 19.5 13.1L8.8 20.1C8 20.6 7 20.1 7 19.2V4.8Z" fill="currentColor"/>
+</symbol>
+
+<symbol id="icon-pause" viewBox="0 0 24 24">
+  <rect x="6" y="4" width="4.5" height="16" rx="1.5" fill="currentColor"/>
+  <rect x="13.5" y="4" width="4.5" height="16" rx="1.5" fill="currentColor"/>
+</symbol>
+
+<symbol id="icon-timer" viewBox="0 0 24 24">
+  <path d="M8 3H16" stroke="#8A5A18" stroke-width="1.6" stroke-linecap="round"/>
+  <path d="M7 7C7 4.5 9 3.5 12 3.5C15 3.5 17 4.5 17 7C17 10 14.5 10.5 14.5 13C14.5 15.5 17 16 17 19C17 21.5 15 22.5 12 22.5C9 22.5 7 21.5 7 19C7 16 9.5 15.5 9.5 13C9.5 10.5 7 10 7 7Z" fill="#F0C665"/>
+  <path d="M8 3H16" stroke="#8A5A18" stroke-width="1.6" stroke-linecap="round"/>
+  <path d="M8 22.5H16" stroke="#8A5A18" stroke-width="1.6" stroke-linecap="round"/>
+</symbol>
+
+<symbol id="icon-bars" viewBox="0 0 24 24">
+  <rect x="4" y="13" width="4" height="8" rx="1.2" fill="#6FAFC9"/>
+  <rect x="10" y="8" width="4" height="13" rx="1.2" fill="#4C7A4A"/>
+  <rect x="16" y="3" width="4" height="18" rx="1.2" fill="#E8A93A"/>
+</symbol>
+
+<symbol id="icon-download" viewBox="0 0 24 24">
+  <path d="M12 3V14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+  <path d="M7 10L12 15L17 10" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M5 18H19" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+</symbol>
+
+<symbol id="icon-check" viewBox="0 0 24 24">
+  <circle cx="12" cy="12" r="10" fill="currentColor" fill-opacity="0.16"/>
+  <path d="M7 12.5L10.3 16L17 8.5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+</symbol>
+
+</defs>
+</svg>
+
+<div id="sun-glow"></div>
+<div id="sparkles"></div>
+<div id="rainbow-streak"></div>
+
+<header id="top-nav">
+  <div class="logo"><span class="logo-mark"><svg class="icon " aria-hidden="true"><use href="#icon-leaf"/></svg></span>MyAffs.</div>
+  <div id="nav-right">
+    <button class="btn btn-primary" id="nav-login-btn" type="button">Log in and create</button>
+    <div id="user-chip" hidden>
+      <button id="user-icon-btn" type="button" aria-haspopup="true" aria-expanded="false"></button>
+      <div id="user-dropdown" hidden role="menu">
+        <div class="uname" id="dropdown-uname"></div>
+        <button type="button" data-nav="app">Create a tape</button>
+        <button type="button" data-nav="profile">My profile</button>
+        <button type="button" id="dropdown-logout">Log out</button>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main>
+
+<!-- ======================= LANDING ======================= -->
+<section id="view-landing">
+  <div class="hero">
+    <div class="eyebrow-mark"><svg class="icon " aria-hidden="true"><use href="#icon-sparkle"/></svg><svg class="icon " aria-hidden="true"><use href="#icon-leaf"/></svg><svg class="icon " aria-hidden="true"><use href="#icon-sparkle"/></svg></div>
+    <h1>Weave your own subliminal, from the ground up.</h1>
+    <p class="sub">Write the words, choose the voice, layer the frequencies — MyAffs. turns your affirmations into a custom audio tape built entirely around you.</p>
+    <div class="hero-actions">
+      <button class="btn btn-primary" data-nav="auth" type="button">Log in and create</button>
+    </div>
+    <p class="hero-note">Free to use · No experience needed · Takes about five minutes</p>
+    <div class="scroll-hint">
+      <span style="font-size:0.8rem;color:var(--ink-soft);">see how it works</span>
+      <span aria-hidden="true" style="font-size:1.1rem;">⌄</span>
+    </div>
+  </div>
+
+  <div id="tutorial">
+    <div class="tut-intro">
+      <h2 class="display">How a tape comes together</h2>
+      <p>Scroll along — this is the whole process, start to finish.</p>
+    </div>
+
+    <div class="step" data-bg="1">
+      <div class="step-visual"><svg class="icon " aria-hidden="true"><use href="#icon-leaf"/></svg></div>
+      <div class="step-text">
+        <span class="step-label">To begin</span>
+        <h3>Write your affirmations, in as many layers as you like</h3>
+        <p>Type freely into the box. Split your words across up to five layers — maybe one is gentle and slow, another quick and insistent.</p>
+      </div>
+    </div>
+
+    <div class="step" data-bg="2">
+      <div class="step-visual"><svg class="icon " aria-hidden="true"><use href="#icon-mic"/></svg></div>
+      <div class="step-text">
+        <span class="step-label">Let it speak</span>
+        <h3>Each layer is turned into spoken audio, tuned your way</h3>
+        <p>Save a layer and it's voiced automatically. From there, set its speed — from a calm 1x to a whisper-fast 10x — and its own volume.</p>
+      </div>
+    </div>
+
+    <div class="step" data-bg="3">
+      <div class="step-visual"><svg class="icon " aria-hidden="true"><use href="#icon-wave"/></svg></div>
+      <div class="step-text">
+        <span class="step-label">Build the world around it</span>
+        <h3>Layer in ambiance, frequencies, tones, and music</h3>
+        <p>Preview rain, solfeggio frequencies, isochronic tones, lo-fi, and more — add whatever supports your intention.</p>
+      </div>
+    </div>
+
+    <div class="step" data-bg="4">
+      <div class="step-visual"><svg class="icon " aria-hidden="true"><use href="#icon-magnify"/></svg></div>
+      <div class="step-text">
+        <span class="step-label">Check your work</span>
+        <h3>See the whole mix laid out in one place</h3>
+        <p>Every layer, every added sound, its speed and its volume — all summarized before you commit to anything.</p>
+      </div>
+    </div>
+
+    <div class="step" data-bg="5">
+      <div class="step-visual"><svg class="icon " aria-hidden="true"><use href="#icon-disc"/></svg></div>
+      <div class="step-text">
+        <span class="step-label">Take it with you</span>
+        <h3>Save your tape and download the finished file</h3>
+        <p>One button renders everything into a single audio file, ready to keep and listen to whenever you like.</p>
+      </div>
+    </div>
+  </div>
+
+  <div id="landing-donate">
+    <h3 class="display"><svg class="icon " aria-hidden="true"><use href="#icon-flower"/></svg> Help keep MyAffs. growing</h3>
+    <p>MyAffs. is built and maintained by one person. Every donation goes directly toward getting the app onto Google Play and the App Store, and onto a sturdier server that can hold more listeners at once. If this tool means something to you, a small contribution goes a long way.</p>
+    <a class="btn btn-sun" href="https://ko-fi.com/myaffs" target="_blank" rel="noopener noreferrer"><svg class="icon " aria-hidden="true"><use href="#icon-cup"/></svg> Support on Ko-fi</a>
+  </div>
+
+  <div class="landing-final">
+    <h2 class="display">Ready to build your first tape?</h2>
+    <button class="btn btn-primary" data-nav="auth" type="button">Log in and create</button>
+  </div>
+
+  <footer class="site-footer">MyAffs. · made with care, for whoever needs it</footer>
+</section>
+
+<div id="bottom-cta">
+  <button class="btn btn-primary" data-nav="auth" type="button">Log in and create</button>
+</div>
+
+<!-- ======================= AUTH ======================= -->
+<section id="view-auth" hidden>
+  <div class="auth-card">
+    <div class="auth-tabs">
+      <button type="button" class="active" id="tab-login">Log in</button>
+      <button type="button" id="tab-signup">Sign up</button>
+    </div>
+    <h2 class="display" id="auth-title">Welcome back</h2>
+    <p class="auth-sub" id="auth-subtitle">Log in to keep building your tape.</p>
+
+    <form id="auth-form" novalidate>
+      <div class="field">
+        <label for="auth-username">Username</label>
+        <input id="auth-username" name="username" type="text" autocomplete="username" maxlength="24" required>
+        <div class="field-error" id="err-username"></div>
+      </div>
+      <div class="field">
+        <label for="auth-password">Password</label>
+        <input id="auth-password" name="password" type="password" autocomplete="current-password" maxlength="64" required>
+        <div class="field-error" id="err-password"></div>
+      </div>
+      <div class="auth-msg" id="auth-msg" role="alert"></div>
+      <button type="submit" class="btn btn-primary auth-submit" id="auth-submit-btn">Log in</button>
+    </form>
+
+    <div class="auth-divider">or</div>
+    <button type="button" class="btn btn-ghost btn-guest" id="guest-btn">Create as guest</button>
+    <button type="button" class="back-home" data-nav="landing">← back to the tutorial</button>
+  </div>
+</section>
+
+<!-- ======================= APP ======================= -->
+<section id="view-app" hidden>
+  <div class="app-header">
+    <h2 class="display">Build your tape</h2>
+    <p>Write your affirmations below, then layer in the sound that carries them.</p>
+  </div>
+
+  <!-- Layers panel -->
+  <div class="panel" id="layers-panel">
+    <div class="panel-title"><h3>Affirmation layers</h3></div>
+    <p class="panel-sub">Write in your own words, or give the topic helper a subject and let it draft a starting point for you.</p>
+
+    <div class="ai-row">
+      <input type="text" id="ai-topic-input" maxlength="80" placeholder="Topic, e.g. &quot;confidence before a job interview&quot;">
+      <button type="button" class="btn btn-ghost" id="ai-generate-btn"><svg class="icon " aria-hidden="true"><use href="#icon-sparkle"/></svg> Write affirmations for me</button>
+    </div>
+
+    <div id="layers-container"></div>
+
+    <button type="button" class="btn btn-ghost" id="add-layer-btn">+ Add another layer</button>
+    <p class="layer-limit-msg" id="layer-limit-msg"></p>
+  </div>
+
+  <!-- Overlay panel -->
+  <div class="panel" id="overlay-panel">
+    <div class="panel-title"><h3>Layer in sound</h3></div>
+    <p class="panel-sub">Preview anything with the play button, then add it to your tape.</p>
+    <div class="tabs" id="overlay-tabs" role="tablist"></div>
+    <div class="overlay-list" id="overlay-list"></div>
+  </div>
+
+  <!-- Summary panel -->
+  <div class="panel" id="summary-panel">
+    <div class="panel-title"><h3>Your tape, so far</h3></div>
+    <div class="summary-block">
+      <h4>Affirmation layers</h4>
+      <div id="summary-layers"></div>
+    </div>
+    <div class="summary-block">
+      <h4>Sound added</h4>
+      <div id="summary-overlays"></div>
+    </div>
+
+    <div id="save-tape-wrap">
+      <button type="button" class="btn btn-primary" id="save-tape-btn"><svg class="icon " aria-hidden="true"><use href="#icon-disc"/></svg> Save tape</button>
+      <p class="tape-note">This renders your spoken affirmations along with ambiance, frequencies, tones and music into one downloadable file. Layers marked "preview only" need a connected voice server to be included.</p>
+
+      <div id="cd-stage">
+        <div id="cd-disc">
+          <button type="button" class="btn btn-sun" id="cd-download-btn"><svg class="icon " aria-hidden="true"><use href="#icon-download"/></svg> Download</button>
+        </div>
+        <div id="cd-status"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= PROFILE ======================= -->
+<section id="view-profile" hidden>
+  <div class="profile-grid">
+    <div class="profile-main">
+      <div class="profile-id">
+        <div class="profile-avatar" id="profile-avatar"></div>
+        <div>
+          <h2 class="display" id="profile-username" style="font-size:1.5rem;"></h2>
+          <p style="font-size:0.85rem;">your tapes are listed below</p>
+        </div>
+      </div>
+      <div id="profile-tapes"></div>
+      <button type="button" class="btn btn-primary" data-nav="app" style="margin-top:10px;">+ Start a new tape</button>
+      <br>
+      <button type="button" class="btn btn-ghost" id="logout-btn-main">Log out</button>
+    </div>
+
+    <aside class="sidebar-card">
+      <h4 class="display"><svg class="icon " aria-hidden="true"><use href="#icon-wand"/></svg> A little more, soon</h4>
+      <p>Wish there was more interaction? I'm currently working on a social side to MyAffs., so that everyone will be able to post their subs publicly (if they so choose), and others can save it, repost it, and see exactly what went into it — a great way to find out what actually works for you.</p>
+      <p>It'll be a way for all of us to see if there's any rhyme or reason — any real science — to subliminals, together. You can help this platform grow just by sharing it, or with a small donation below.</p>
+      <p style="font-size:0.8rem; opacity:0.85;">Every penny goes toward the work I put into keeping this page running and improving it, piece by piece. Thank you.</p>
+      <a class="btn btn-sun" href="https://ko-fi.com/myaffs" target="_blank" rel="noopener noreferrer"><svg class="icon " aria-hidden="true"><use href="#icon-cup"/></svg> Support on Ko-fi</a>
+    </aside>
+  </div>
+</section>
+
+</main>
+
+<!-- Popovers -->
+<div class="popover-overlay" id="popover-overlay" hidden></div>
+<div class="popover" id="popover-speed" hidden>
+  <h4>Speed <button type="button" class="close-pop" data-close-pop>✕</button></h4>
+  <input type="range" id="speed-range" min="1" max="10" step="0.5" value="1">
+  <div class="pop-value" id="speed-value">1x</div>
+</div>
+<div class="popover" id="popover-volume" hidden>
+  <h4>Volume <button type="button" class="close-pop" data-close-pop>✕</button></h4>
+  <input type="range" id="volume-range" min="0" max="100" step="5" value="80">
+  <div class="pop-value" id="volume-value">80%</div>
+</div>
+
+<!-- Donate modal -->
+<div class="modal-overlay" id="donate-modal" hidden>
+  <div class="modal-box">
+    <div class="mark"><svg class="icon modal-icon" aria-hidden="true"><use href="#icon-rainbow"/></svg></div>
+    <h3 class="display">Your tape is ready</h3>
+    <p>MyAffs. is built by one person, in the open. If it helped you, a donation goes straight toward putting MyAffs. on Google Play and the App Store, and onto a stronger server for everyone. Every bit helps.</p>
+    <div class="modal-actions">
+      <a class="btn btn-sun" href="https://ko-fi.com/myaffs" target="_blank" rel="noopener noreferrer"><svg class="icon " aria-hidden="true"><use href="#icon-cup"/></svg> Support on Ko-fi</a>
+      <button type="button" class="link-later" id="donate-later-btn">I'll contribute later</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast" role="status" aria-live="polite"></div>
+
+<script>
+(function(){
+"use strict";
+
+/* ============================================================
+   UTILITIES
+   ============================================================ */
+function escapeHTML(str){
+  return String(str).replace(/[&<>"']/g, function(c){
+    return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];
+  });
+}
+function clampNum(n, min, max){ return Math.min(max, Math.max(min, n)); }
+function el(tag, attrs, children){
+  var e = document.createElement(tag);
+  attrs = attrs || {};
+  Object.keys(attrs).forEach(function(k){
+    if(k === "class") e.className = attrs[k];
+    else if(k === "text") e.textContent = attrs[k];
+    else if(k.indexOf("on") === 0 && typeof attrs[k] === "function") e.addEventListener(k.slice(2), attrs[k]);
+    else e.setAttribute(k, attrs[k]);
+  });
+  (children||[]).forEach(function(c){ if(c) e.appendChild(c); });
+  return e;
+}
+function showToast(msg){
+  var t = document.getElementById("toast");
+  t.textContent = msg;
+  t.classList.add("show");
+  clearTimeout(showToast._tm);
+  showToast._tm = setTimeout(function(){ t.classList.remove("show"); }, 2600);
+}
+async function sha256(text){
+  var enc = new TextEncoder().encode(text);
+  var buf = await crypto.subtle.digest("SHA-256", enc);
+  return Array.from(new Uint8Array(buf)).map(function(b){return b.toString(16).padStart(2,"0");}).join("");
+}
+function randId(){ return Math.random().toString(36).slice(2,10) + Date.now().toString(36); }
+var SVG_NS = "http://www.w3.org/2000/svg";
+function iconEl(name, cls){
+  var svg = document.createElementNS(SVG_NS, "svg");
+  svg.setAttribute("class", "icon" + (cls ? (" "+cls) : ""));
+  svg.setAttribute("aria-hidden", "true");
+  var use = document.createElementNS(SVG_NS, "use");
+  use.setAttributeNS("http://www.w3.org/1999/xlink", "href", "#icon-"+name);
+  use.setAttribute("href", "#icon-"+name);
+  svg.appendChild(use);
+  return svg;
+}
+function setIcon(btn, name){
+  var existing = btn.querySelector("svg.icon");
+  if(existing) existing.remove();
+  btn.insertBefore(iconEl(name), btn.firstChild);
+}
+
+/* ============================================================
+   STORAGE (namespaced, sanitized on read/write)
+   ============================================================ */
+var STORE_KEY = "myaffs_users_v1";
+function loadUsers(){
+  try{
+    var raw = localStorage.getItem(STORE_KEY);
+    if(!raw) return {};
+    var parsed = JSON.parse(raw);
+    return (parsed && typeof parsed === "object") ? parsed : {};
+  }catch(e){ return {}; }
+}
+function saveUsers(users){
+  try{ localStorage.setItem(STORE_KEY, JSON.stringify(users)); }catch(e){ /* storage unavailable */ }
+}
+
+/* ============================================================
+   APP STATE
+   ============================================================ */
+var state = {
+  currentUser: null,   // { username, isGuest }
+  layers: [],           // { id, text, speed, volume, locked, loading }
+  overlays: [],          // { key, category, name, meta }
+  guestTapes: []
+};
+
+var OVERLAY_CATALOG = {
+  ambiance: [
+    {name:"Rain", meta:"soft, steady rainfall"},
+    {name:"Thunder", meta:"distant rolling storm"},
+    {name:"Fire", meta:"crackling hearth"},
+    {name:"City", meta:"low urban hum"},
+    {name:"Cafe", meta:"gentle chatter & clinks"}
+  ],
+  frequencies: [
+    {name:"174 Hz", meta:"foundation, pain relief"},
+    {name:"285 Hz", meta:"tissue & energy repair"},
+    {name:"396 Hz", meta:"liberating fear & guilt"},
+    {name:"417 Hz", meta:"undoing situations"},
+    {name:"432 Hz", meta:"natural tuning"},
+    {name:"528 Hz", meta:"transformation, \"love frequency\""},
+    {name:"639 Hz", meta:"connecting relationships"},
+    {name:"741 Hz", meta:"awakening intuition"},
+    {name:"852 Hz", meta:"returning to spiritual order"},
+    {name:"963 Hz", meta:"crown / divine connection"}
+  ],
+  tones: [
+    {name:"Delta wave", meta:"~2 Hz isochronic, deep sleep"},
+    {name:"Theta wave", meta:"~6 Hz isochronic, meditation"},
+    {name:"Alpha wave", meta:"~10 Hz isochronic, relaxed focus"},
+    {name:"Beta wave", meta:"~20 Hz isochronic, alertness"},
+    {name:"Gamma wave", meta:"~40 Hz isochronic, high focus"}
+  ],
+  music: [
+    {name:"Lo-Fi", meta:"placeholder track"},
+    {name:"Rap", meta:"placeholder track"},
+    {name:"Jazz", meta:"placeholder track"},
+    {name:"Classical", meta:"placeholder track"},
+    {name:"Country", meta:"placeholder track"},
+    {name:"Pop", meta:"placeholder track"},
+    {name:"EDM", meta:"placeholder track"},
+    {name:"R&B", meta:"placeholder track"},
+    {name:"Folk", meta:"placeholder track"}
+  ]
+};
+var TAB_ORDER = ["ambiance","frequencies","tones","music"];
+var TAB_LABELS = {ambiance:"Ambiance", frequencies:"Frequencies", tones:"Tones", music:"Music"};
+
+/* ============================================================
+   VIEW ROUTER
+   ============================================================ */
+var VIEWS = ["landing","auth","app","profile"];
+function showView(name){
+  VIEWS.forEach(function(v){
+    var section = document.getElementById("view-"+v);
+    if(section) section.hidden = (v !== name);
+  });
+  document.getElementById("bottom-cta").style.display = (name === "landing") ? "block" : "none";
+  if(name !== "landing") window.scrollTo({top:0, behavior:"instant" in window ? "instant" : "auto"});
+  closeUserDropdown();
+  if(name === "profile") renderProfile();
+  syncNav();
+}
+document.addEventListener("click", function(e){
+  var navTarget = e.target.closest("[data-nav]");
+  if(navTarget){
+    var dest = navTarget.getAttribute("data-nav");
+    if((dest === "app" || dest === "profile") && !state.currentUser){
+      showView("auth"); return;
+    }
+    showView(dest);
+  }
+});
+document.getElementById("nav-login-btn").addEventListener("click", function(){ showView("auth"); });
+
+/* ============================================================
+   NAV / USER MENU
+   ============================================================ */
+function syncNav(){
+  var loginBtn = document.getElementById("nav-login-btn");
+  var chip = document.getElementById("user-chip");
+  if(state.currentUser){
+    loginBtn.hidden = true;
+    chip.hidden = false;
+    var initial = state.currentUser.isGuest ? "G" : state.currentUser.username.charAt(0).toUpperCase();
+    document.getElementById("user-icon-btn").textContent = initial;
+    document.getElementById("dropdown-uname").textContent = state.currentUser.isGuest ? "Guest" : state.currentUser.username;
+  } else {
+    loginBtn.hidden = false;
+    chip.hidden = true;
+  }
+}
+var userIconBtn = document.getElementById("user-icon-btn");
+var userDropdown = document.getElementById("user-dropdown");
+userIconBtn.addEventListener("click", function(e){
+  e.stopPropagation();
+  var willShow = userDropdown.hidden;
+  userDropdown.hidden = !willShow;
+  userIconBtn.setAttribute("aria-expanded", String(willShow));
+});
+function closeUserDropdown(){ userDropdown.hidden = true; userIconBtn.setAttribute("aria-expanded","false"); }
+document.addEventListener("click", function(e){
+  if(!userDropdown.hidden && !e.target.closest("#user-chip")) closeUserDropdown();
+});
+document.getElementById("dropdown-logout").addEventListener("click", logout);
+document.getElementById("logout-btn-main").addEventListener("click", logout);
+function logout(){
+  state.currentUser = null;
+  state.layers = [];
+  state.overlays = [];
+  resetLayersUI();
+  renderOverlayList();
+  renderSummary();
+  showView("landing");
+  showToast("Logged out");
+}
+
+/* ============================================================
+   AUTH
+   ============================================================ */
+var authMode = "login";
+document.getElementById("tab-login").addEventListener("click", function(){ setAuthMode("login"); });
+document.getElementById("tab-signup").addEventListener("click", function(){ setAuthMode("signup"); });
+function setAuthMode(mode){
+  authMode = mode;
+  document.getElementById("tab-login").classList.toggle("active", mode === "login");
+  document.getElementById("tab-signup").classList.toggle("active", mode === "signup");
+  document.getElementById("auth-title").textContent = mode === "login" ? "Welcome back" : "Create your account";
+  document.getElementById("auth-subtitle").textContent = mode === "login" ? "Log in to keep building your tape." : "Sign up to save your tapes as you make them.";
+  document.getElementById("auth-submit-btn").textContent = mode === "login" ? "Log in" : "Sign up";
+  document.getElementById("auth-password").autocomplete = mode === "login" ? "current-password" : "new-password";
+  clearAuthErrors();
+}
+function clearAuthErrors(){
+  document.getElementById("err-username").textContent = "";
+  document.getElementById("err-password").textContent = "";
+  document.getElementById("auth-msg").textContent = "";
+}
+var USERNAME_RE = /^[A-Za-z0-9_]{3,20}$/;
+document.getElementById("auth-form").addEventListener("submit", async function(e){
+  e.preventDefault();
+  clearAuthErrors();
+  var username = document.getElementById("auth-username").value.trim();
+  var password = document.getElementById("auth-password").value;
+  var ok = true;
+  if(!USERNAME_RE.test(username)){
+    document.getElementById("err-username").textContent = "3-20 characters: letters, numbers, underscore only.";
+    ok = false;
+  }
+  if(password.length < 6 || password.length > 64){
+    document.getElementById("err-password").textContent = "Password needs to be 6-64 characters.";
+    ok = false;
+  }
+  if(!ok) return;
+
+  var submitBtn = document.getElementById("auth-submit-btn");
+  submitBtn.disabled = true;
+  var users = loadUsers();
+  var key = username.toLowerCase();
+
+  if(authMode === "signup"){
+    if(users[key]){
+      document.getElementById("auth-msg").textContent = "That username is already taken.";
+      submitBtn.disabled = false; return;
+    }
+    var hash = await sha256(username.toLowerCase()+"::"+password);
+    users[key] = { username: username, hash: hash, tapes: [] };
+    saveUsers(users);
+    state.currentUser = { username: username, isGuest: false };
+    showToast("Account created — welcome!");
+  } else {
+    var record = users[key];
+    if(!record){
+      document.getElementById("auth-msg").textContent = "No account found with that username.";
+      submitBtn.disabled = false; return;
+    }
+    var attemptHash = await sha256(username.toLowerCase()+"::"+password);
+    if(attemptHash !== record.hash){
+      document.getElementById("auth-msg").textContent = "Incorrect password.";
+      submitBtn.disabled = false; return;
+    }
+    state.currentUser = { username: record.username, isGuest: false };
+    showToast("Welcome back, "+record.username+"!");
+  }
+  submitBtn.disabled = false;
+  document.getElementById("auth-form").reset();
+  resetLayersUI();
+  showView("app");
+});
+document.getElementById("guest-btn").addEventListener("click", function(){
+  state.currentUser = { username: "Guest-"+randId().slice(0,4), isGuest: true };
+  resetLayersUI();
+  showToast("Continuing as guest — tapes won't be saved to an account.");
+  showView("app");
+});
+
+/* ============================================================
+   LAYERS
+   ============================================================ */
+var MAX_LAYERS = 5;
+var layersContainer = document.getElementById("layers-container");
+var addLayerBtn = document.getElementById("add-layer-btn");
+
+function resetLayersUI(){
+  state.layers = [];
+  layersContainer.innerHTML = "";
+  addLayer();
+  updateAddLayerBtn();
+}
+
+function addLayer(){
+  if(state.layers.length >= MAX_LAYERS) return;
+  var layer = { id: randId(), text:"", speed:1, volume:80, locked:false, loading:false, audioBuffer:null, voiceSource:null };
+  state.layers.push(layer);
+  renderLayer(layer);
+  updateAddLayerBtn();
+}
+addLayerBtn.addEventListener("click", addLayer);
+
+function updateAddLayerBtn(){
+  var atMax = state.layers.length >= MAX_LAYERS;
+  addLayerBtn.hidden = atMax;
+  document.getElementById("layer-limit-msg").textContent = atMax ? "You've reached the 5-layer limit." : "";
+}
+
+function renderLayer(layer){
+  var wrap = el("div", {class:"layer", id:"layer-"+layer.id});
+
+  var head = el("div", {class:"layer-head"});
+  var num = el("span", {class:"layer-num", text:"Layer "+ (state.layers.indexOf(layer)+1)});
+  var controls = el("div", {class:"layer-controls"});
+  var spinner = el("div", {class:"spinner", id:"spinner-"+layer.id});
+  var playBtn = el("button", {class:"icon-btn", id:"play-"+layer.id, type:"button", title:"Preview voice", "aria-label":"Preview layer voice"});
+  playBtn.appendChild(iconEl("play"));
+  var speedBtn = el("button", {class:"icon-btn", id:"speed-"+layer.id, type:"button", title:"Speed", "aria-label":"Set layer speed"});
+  speedBtn.appendChild(iconEl("timer"));
+  var volBtn = el("button", {class:"icon-btn", id:"vol-"+layer.id, type:"button", title:"Volume", "aria-label":"Set layer volume"});
+  volBtn.appendChild(iconEl("bars"));
+  controls.appendChild(spinner);
+  controls.appendChild(playBtn);
+  controls.appendChild(speedBtn);
+  controls.appendChild(volBtn);
+  head.appendChild(num);
+  head.appendChild(controls);
+
+  var textarea = el("textarea", {
+    id:"ta-"+layer.id, maxlength:"1200", placeholder:"Enter your affirmations here",
+    "aria-label":"Affirmation layer text"
+  });
+
+  var foot = el("div", {class:"layer-foot"});
+  var count = el("span", {class:"char-count", id:"count-"+layer.id, text:"0 / 1200"});
+  var lockedTag = el("span", {class:"locked-tag", text:"✓ Saved"});
+  var saveBtn = el("button", {class:"btn btn-primary save-layer-btn", type:"button", text:"Save affirmations"});
+  foot.appendChild(count);
+  foot.appendChild(lockedTag);
+  foot.appendChild(saveBtn);
+
+  wrap.appendChild(head);
+  wrap.appendChild(textarea);
+  wrap.appendChild(foot);
+  layersContainer.appendChild(wrap);
+
+  textarea.addEventListener("input", function(){
+    var v = textarea.value;
+    layer.text = v;
+    textarea.classList.toggle("typed", v.trim().length > 0);
+    count.textContent = v.length + " / 1200";
+    renderSummary();
+  });
+
+  saveBtn.addEventListener("click", async function(){
+    var text = textarea.value.trim();
+    if(!text){
+      showToast("Write something before saving this layer.");
+      return;
+    }
+    layer.text = text;
+    layer.locked = true;
+    layer.loading = true;
+    textarea.disabled = true;
+    wrap.classList.add("locked");
+    spinner.classList.add("show");
+    playBtn.classList.remove("show");
+    speedBtn.classList.remove("show");
+    volBtn.classList.remove("show");
+    showToast("Layer saved — sending to the voice server…");
+    renderSummary();
+
+    var result = await synthesizeLayerAudio(layer);
+    layer.loading = false;
+    spinner.classList.remove("show");
+    playBtn.classList.add("show");
+    speedBtn.classList.add("show");
+    volBtn.classList.add("show");
+
+    if(result.ok){
+      layer.audioBuffer = result.buffer;
+      layer.voiceSource = "server";
+      showToast("Layer "+(state.layers.indexOf(layer)+1)+" is ready to play.");
+    } else {
+      layer.audioBuffer = null;
+      layer.voiceSource = "none";
+      showToast(result.message || "Voice server unavailable — layer saved without spoken audio.");
+    }
+    renderSummary();
+  });
+
+  playBtn.addEventListener("click", function(){
+    previewLayerVoice(layer, playBtn);
+  });
+  speedBtn.addEventListener("click", function(e){
+    openPopover("speed", speedBtn, layer);
+  });
+  volBtn.addEventListener("click", function(e){
+    openPopover("volume", volBtn, layer);
+  });
+}
+
+var previewLayerSource = null;
+function previewLayerVoice(layer, btn){
+  if(previewLayerSource){ try{ previewLayerSource.stop(); }catch(e){} previewLayerSource = null; }
+  window.speechSynthesis && window.speechSynthesis.cancel();
+
+  if(layer.audioBuffer){
+    // Play back the exact audio the server generated, at this layer's speed & volume.
+    var ctx = getLiveCtx();
+    var src = ctx.createBufferSource();
+    src.buffer = layer.audioBuffer;
+    src.playbackRate.value = clampNum(layer.speed, 0.25, 10);
+    var gain = ctx.createGain();
+    gain.gain.value = clampNum(layer.volume/100, 0, 1);
+    src.connect(gain); gain.connect(ctx.destination);
+    setIcon(btn, "pause");
+    src.onended = function(){ setIcon(btn, "play"); previewLayerSource = null; };
+    src.start();
+    previewLayerSource = src;
+    return;
+  }
+
+  if(!("speechSynthesis" in window)){
+    showToast("Voice preview isn't supported in this browser.");
+    return;
+  }
+  var utter = new SpeechSynthesisUtterance(layer.text);
+  utter.rate = clampNum(layer.speed, 0.5, 10); // most browsers clamp actual playback to ~10x max
+  utter.volume = clampNum(layer.volume/100, 0, 1);
+  setIcon(btn, "pause");
+  utter.onend = function(){ setIcon(btn, "play"); };
+  utter.onerror = function(){ setIcon(btn, "play"); };
+  window.speechSynthesis.speak(utter);
+}
+
+/* ---- AI topic helper (local generator, no external calls) ---- */
+var AFF_TEMPLATES = [
+  "I am fully capable when it comes to {topic}.",
+  "Every day I grow more confident in {topic}.",
+  "{topicCap} comes naturally to me now.",
+  "I trust myself completely with {topic}.",
+  "I welcome ease and progress around {topic}.",
+  "I am worthy of success in {topic}.",
+  "My mind is calm, clear, and focused on {topic}.",
+  "I release doubt and move forward with {topic}.",
+  "I attract the outcomes I want in {topic}.",
+  "I am proud of how far I've come with {topic}."
+];
+document.getElementById("ai-generate-btn").addEventListener("click", function(){
+  var raw = document.getElementById("ai-topic-input").value.trim();
+  if(!raw){ showToast("Enter a topic first."); return; }
+  var topic = raw.slice(0,80);
+  var topicCap = topic.charAt(0).toUpperCase()+topic.slice(1);
+  var shuffled = AFF_TEMPLATES.slice().sort(function(){return Math.random()-0.5;}).slice(0,6);
+  var lines = shuffled.map(function(t){
+    return t.replace(/{topicCap}/g, topicCap).replace(/{topic}/g, topic);
+  });
+  var openLayer = state.layers.find(function(l){ return !l.locked; });
+  if(!openLayer){
+    if(state.layers.length >= MAX_LAYERS){ showToast("All layers are full — save or clear one first."); return; }
+    addLayer();
+    openLayer = state.layers[state.layers.length-1];
+  }
+  var ta = document.getElementById("ta-"+openLayer.id);
+  ta.value = lines.join(" ");
+  ta.dispatchEvent(new Event("input"));
+  showToast("Drafted some affirmations — feel free to edit them.");
+});
+
+/* ============================================================
+   POPOVERS (speed / volume)
+   ============================================================ */
+var popOverlay = document.getElementById("popover-overlay");
+var popSpeed = document.getElementById("popover-speed");
+var popVolume = document.getElementById("popover-volume");
+var activePopLayer = null;
+
+function openPopover(kind, anchorBtn, layer){
+  activePopLayer = layer;
+  var pop = kind === "speed" ? popSpeed : popVolume;
+  var other = kind === "speed" ? popVolume : popSpeed;
+  other.hidden = true;
+  var rect = anchorBtn.getBoundingClientRect();
+  pop.style.top = (window.scrollY + rect.bottom + 8) + "px";
+  var left = window.scrollX + rect.left - 100;
+  left = clampNum(left, 10, window.innerWidth - 270);
+  pop.style.left = left + "px";
+  pop.hidden = false;
+  popOverlay.hidden = false;
+
+  if(kind === "speed"){
+    document.getElementById("speed-range").value = layer.speed;
+    document.getElementById("speed-value").textContent = layer.speed + "x";
+  } else {
+    document.getElementById("volume-range").value = layer.volume;
+    document.getElementById("volume-value").textContent = layer.volume + "%";
+  }
+}
+function closePopovers(){
+  popSpeed.hidden = true; popVolume.hidden = true; popOverlay.hidden = true; activePopLayer = null;
+}
+popOverlay.addEventListener("click", closePopovers);
+document.querySelectorAll("[data-close-pop]").forEach(function(b){ b.addEventListener("click", closePopovers); });
+document.getElementById("speed-range").addEventListener("input", function(e){
+  if(!activePopLayer) return;
+  var v = parseFloat(e.target.value);
+  activePopLayer.speed = v;
+  document.getElementById("speed-value").textContent = v + "x";
+  renderSummary();
+});
+document.getElementById("volume-range").addEventListener("input", function(e){
+  if(!activePopLayer) return;
+  var v = parseInt(e.target.value, 10);
+  activePopLayer.volume = v;
+  document.getElementById("volume-value").textContent = v + "%";
+  renderSummary();
+});
+
+/* ============================================================
+   AUDIO ENGINE (Web Audio previews + tape rendering)
+   ============================================================ */
+/* ============================================================
+   SERVER-SIDE TEXT-TO-SPEECH
+   ------------------------------------------------------------
+   MyAffs. expects a backend voice server at TTS_ENDPOINT that turns
+   an affirmation layer's text into spoken audio.
+
+   Request  (POST, JSON):  { "text": "...", "speed": 1.5, "voice": "default" }
+   Response (200):         audio bytes, Content-Type: audio/wav (or audio/mpeg)
+   Response (4xx/5xx):     JSON { "error": "message" } — shown to the user
+
+   If the frontend and backend are hosted separately (e.g. this page on
+   GitHub Pages, the model on your own server), change TTS_ENDPOINT to
+   the full URL of your server and make sure it sends CORS headers
+   (Access-Control-Allow-Origin) — see server/app.py for a reference
+   implementation you can drop your trained model into.
+   ============================================================ */
+var TTS_ENDPOINT = "/api/tts";
+var TTS_TIMEOUT_MS = 25000;
+
+async function synthesizeLayerAudio(layer){
+  try{
+    var controller = new AbortController();
+    var timeoutId = setTimeout(function(){ controller.abort(); }, TTS_TIMEOUT_MS);
+
+    var res = await fetch(TTS_ENDPOINT, {
+      method: "POST",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({ text: layer.text, speed: layer.speed, voice: "default" }),
+      signal: controller.signal
+    });
+    clearTimeout(timeoutId);
+
+    if(!res.ok){
+      var errMsg = "The voice server couldn't process this layer.";
+      try{ var errJson = await res.json(); if(errJson && errJson.error) errMsg = String(errJson.error).slice(0,160); }catch(e){}
+      return {ok:false, message: errMsg};
+    }
+
+    var arrayBuffer = await res.arrayBuffer();
+    if(!arrayBuffer || arrayBuffer.byteLength === 0){
+      return {ok:false, message:"The voice server returned an empty response."};
+    }
+    var ctx = getLiveCtx();
+    var audioBuffer = await ctx.decodeAudioData(arrayBuffer.slice(0));
+    return {ok:true, buffer: audioBuffer};
+
+  }catch(err){
+    // No backend connected yet (e.g. viewing this file as a static page) — fail gracefully.
+    var msg = (err && err.name === "AbortError")
+      ? "The voice server took too long to respond."
+      : "No voice server is connected yet — this layer will play in your browser's own voice for preview, but won't be included in the downloaded file until a TTS server is wired up.";
+    return {ok:false, message: msg};
+  }
+}
+
+var AudioCtx = window.AudioContext || window.webkitAudioContext;
+var liveCtx = null;
+function getLiveCtx(){
+  if(!liveCtx) liveCtx = new AudioCtx();
+  if(liveCtx.state === "suspended") liveCtx.resume();
+  return liveCtx;
+}
+var currentPreview = null; // {stop()}
+
+function stopCurrentPreview(){
+  if(currentPreview){ try{ currentPreview.stop(); }catch(e){} currentPreview = null; }
+  document.querySelectorAll(".play-btn.playing").forEach(function(b){ b.classList.remove("playing"); setIcon(b,"play"); });
+}
+
+/* Build a graph for a given overlay definition onto the given AudioContext (live or offline).
+   Returns {output: AudioNode} already connected internally; caller connects output -> destination-ish node. */
+function buildOverlayGraph(ctx, category, name, startTime, duration){
+  var out = ctx.createGain();
+  out.gain.value = 1;
+
+  if(category === "frequencies"){
+    var hz = parseInt(name, 10) || 432;
+    var osc = ctx.createOscillator();
+    osc.type = "sine";
+    osc.frequency.value = hz;
+    osc.connect(out);
+    osc.start(startTime); osc.stop(startTime+duration);
+    return {output:out, stop:function(){ try{osc.stop();}catch(e){} }};
+  }
+
+  if(category === "tones"){
+    var beatMap = {"Delta wave":2,"Theta wave":6,"Alpha wave":10,"Beta wave":20,"Gamma wave":40};
+    var beat = beatMap[name] || 6;
+    var carrier = ctx.createOscillator();
+    carrier.type = "sine"; carrier.frequency.value = 200;
+    var lfo = ctx.createOscillator();
+    lfo.type = "square"; lfo.frequency.value = beat;
+    var lfoGain = ctx.createGain(); lfoGain.gain.value = 0.5;
+    var baseGain = ctx.createGain(); baseGain.gain.value = 0.5;
+    lfo.connect(lfoGain); lfoGain.connect(baseGain.gain);
+    carrier.connect(baseGain); baseGain.connect(out);
+    carrier.start(startTime); carrier.stop(startTime+duration);
+    lfo.start(startTime); lfo.stop(startTime+duration);
+    return {output:out, stop:function(){ try{carrier.stop(); lfo.stop();}catch(e){} }};
+  }
+
+  if(category === "ambiance"){
+    var bufferSize = Math.max(1, Math.floor(ctx.sampleRate * Math.min(duration,2)));
+    var noiseBuffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+    var data = noiseBuffer.getChannelData(0);
+    var lastOut = 0;
+    for(var i=0;i<bufferSize;i++){
+      var white = Math.random()*2-1;
+      lastOut = (lastOut + 0.02*white) / 1.02;
+      data[i] = lastOut * 3.2; // brown-ish noise
+    }
+    var src = ctx.createBufferSource();
+    src.buffer = noiseBuffer; src.loop = true;
+    var filter = ctx.createBiquadFilter();
+    var presets = {"Rain":{type:"highpass",f:1200},"Thunder":{type:"lowpass",f:180},"Fire":{type:"bandpass",f:800},"City":{type:"lowpass",f:500},"Cafe":{type:"bandpass",f:1500}};
+    var p = presets[name] || {type:"lowpass", f:800};
+    filter.type = p.type; filter.frequency.value = p.f;
+    src.connect(filter); filter.connect(out);
+    out.gain.value = 0.5;
+    src.start(startTime); src.stop(startTime+duration);
+    return {output:out, stop:function(){ try{src.stop();}catch(e){} }};
+  }
+
+  /* music placeholder — simple gentle arpeggio distinct per genre */
+  var chordMap = {
+    "Lo-Fi":[261.6,311.1,392.0], "Rap":[130.8,164.8,196.0], "Jazz":[261.6,329.6,415.3,493.9],
+    "Classical":[261.6,329.6,392.0,523.3], "Country":[196.0,246.9,293.7], "Pop":[293.7,369.9,440.0],
+    "EDM":[220.0,277.2,329.6], "R&B":[246.9,311.1,369.9], "Folk":[220.0,261.6,329.6]
+  };
+  var notes = chordMap[name] || [261.6,329.6,392.0];
+  var noteLen = 0.42;
+  var stops = [];
+  var t = startTime;
+  var i2 = 0;
+  while(t < startTime+duration){
+    var o = ctx.createOscillator();
+    o.type = "triangle";
+    o.frequency.value = notes[i2 % notes.length];
+    var g = ctx.createGain();
+    g.gain.setValueAtTime(0.0001, t);
+    g.gain.linearRampToValueAtTime(0.25, t+0.03);
+    g.gain.exponentialRampToValueAtTime(0.0001, t+noteLen);
+    o.connect(g); g.connect(out);
+    o.start(t); o.stop(t+noteLen+0.02);
+    stops.push(o);
+    t += noteLen;
+    i2++;
+  }
+  return {output:out, stop:function(){ stops.forEach(function(o){ try{o.stop();}catch(e){} }); }};
+}
+
+var previewToken = 0;
+function previewOverlay(category, name, btn){
+  stopCurrentPreview();
+  var ctx = getLiveCtx();
+  var master = ctx.createGain();
+  master.gain.value = 0.35;
+  master.connect(ctx.destination);
+  var graph = buildOverlayGraph(ctx, category, name, ctx.currentTime, 5);
+  graph.output.connect(master);
+  btn.classList.add("playing");
+  setIcon(btn, "pause");
+  var myToken = ++previewToken;
+  currentPreview = { stop: function(){ graph.stop(); btn.classList.remove("playing"); setIcon(btn,"play"); } };
+  setTimeout(function(){
+    if(previewToken !== myToken) return; // a newer preview has already taken over
+    btn.classList.remove("playing");
+    setIcon(btn, "play");
+    currentPreview = null;
+  }, 5200);
+}
+
+/* ============================================================
+   OVERLAY TABS + LIST
+   ============================================================ */
+var activeTab = "ambiance";
+var tabsBar = document.getElementById("overlay-tabs");
+TAB_ORDER.forEach(function(cat){
+  var btn = el("button", {class:"tab-btn"+(cat===activeTab?" active":""), type:"button", role:"tab", text:TAB_LABELS[cat]});
+  btn.addEventListener("click", function(){
+    activeTab = cat;
+    document.querySelectorAll(".tab-btn").forEach(function(b){b.classList.remove("active");});
+    btn.classList.add("active");
+    renderOverlayList();
+  });
+  tabsBar.appendChild(btn);
+});
+
+function overlayKey(cat,name){ return cat+"::"+name; }
+function isAdded(cat,name){ return state.overlays.some(function(o){ return o.key === overlayKey(cat,name); }); }
+
+function renderOverlayList(){
+  var list = document.getElementById("overlay-list");
+  list.innerHTML = "";
+  OVERLAY_CATALOG[activeTab].forEach(function(item){
+    var row = el("div", {class:"overlay-row"});
+    var playBtn = el("button", {class:"play-btn", type:"button", "aria-label":"Preview "+item.name});
+    playBtn.appendChild(el("span",{class:"ring"}));
+    playBtn.appendChild(iconEl("play"));
+    playBtn.addEventListener("click", function(){ previewOverlay(activeTab, item.name, playBtn); });
+
+    var nameWrap = el("div", {class:"overlay-name"});
+    nameWrap.appendChild(document.createTextNode(item.name));
+    nameWrap.appendChild(el("span", {class:"overlay-sub", text:item.meta}));
+
+    var addBtn = el("button", {class:"add-btn"+(isAdded(activeTab,item.name)?" added":""), type:"button"});
+    addBtn.textContent = isAdded(activeTab,item.name) ? "✓ Added" : "Add";
+    addBtn.addEventListener("click", function(){
+      var key = overlayKey(activeTab, item.name);
+      var idx = state.overlays.findIndex(function(o){return o.key===key;});
+      if(idx === -1){
+        state.overlays.push({key:key, category:activeTab, name:item.name});
+        addBtn.classList.add("added"); addBtn.textContent = "✓ Added";
+        showToast(item.name+" added to your tape.");
+      } else {
+        state.overlays.splice(idx,1);
+        addBtn.classList.remove("added"); addBtn.textContent = "Add";
+      }
+      renderSummary();
+    });
+
+    row.appendChild(playBtn);
+    row.appendChild(nameWrap);
+    row.appendChild(addBtn);
+    list.appendChild(row);
+  });
+}
+
+/* ============================================================
+   SUMMARY
+   ============================================================ */
+function renderSummary(){
+  var layersWrap = document.getElementById("summary-layers");
+  layersWrap.innerHTML = "";
+  var savedLayers = state.layers.filter(function(l){ return l.text.trim().length>0; });
+  if(savedLayers.length === 0){
+    layersWrap.appendChild(el("p",{class:"summary-empty", text:"No affirmation layers yet."}));
+  } else {
+    state.layers.forEach(function(l, idx){
+      if(!l.text.trim()) return;
+      var words = l.text.trim().split(/\s+/).slice(0,9).join(" ");
+      var preview = words + (l.text.trim().split(/\s+/).length>9 ? "…" : "");
+      var item = el("div", {class:"summary-item"});
+      item.appendChild(el("span", {class:"tag", text:"Layer "+(idx+1)}));
+      item.appendChild(el("span", {style:"flex:1;", text:preview}));
+      if(l.locked && !l.audioBuffer){
+        item.appendChild(el("span", {style:"color:var(--blush);font-size:0.75rem;font-weight:700;", text:"preview only"}));
+      }
+      item.appendChild(el("span", {style:"color:var(--ink-soft);font-size:0.8rem;", text:l.speed+"x · "+l.volume+"%"}));
+      layersWrap.appendChild(item);
+    });
+  }
+
+  var overlaysWrap = document.getElementById("summary-overlays");
+  overlaysWrap.innerHTML = "";
+  if(state.overlays.length === 0){
+    overlaysWrap.appendChild(el("p",{class:"summary-empty", text:"No sound layered in yet."}));
+  } else {
+    state.overlays.forEach(function(o){
+      var item = el("div", {class:"summary-item"});
+      item.appendChild(el("span", {class:"tag", text:TAB_LABELS[o.category]}));
+      item.appendChild(el("span", {style:"flex:1;", text:o.name}));
+      overlaysWrap.appendChild(item);
+    });
+  }
+}
+
+/* ============================================================
+   SAVE TAPE / RENDER / DOWNLOAD
+   ============================================================ */
+function bufferToWave(abuffer){
+  var numOfChan = abuffer.numberOfChannels;
+  var length = abuffer.length * numOfChan * 2 + 44;
+  var bufferArr = new ArrayBuffer(length);
+  var view = new DataView(bufferArr);
+  var channels = [];
+  var offset = 0, pos = 0;
+
+  function writeString(s){ for(var i=0;i<s.length;i++){ view.setUint8(pos++, s.charCodeAt(i)); } }
+  function write16(d){ view.setUint16(pos, d, true); pos += 2; }
+  function write32(d){ view.setUint32(pos, d, true); pos += 4; }
+
+  writeString("RIFF"); write32(length-8); writeString("WAVE");
+  writeString("fmt "); write32(16); write16(1); write16(numOfChan);
+  write32(abuffer.sampleRate); write32(abuffer.sampleRate*2*numOfChan); write16(numOfChan*2); write16(16);
+  writeString("data"); write32(length-pos-4);
+
+  for(var i=0;i<abuffer.numberOfChannels;i++) channels.push(abuffer.getChannelData(i));
+  var sampleIdx = 0;
+  while(pos < length){
+    for(var c=0;c<numOfChan;c++){
+      var sample = Math.max(-1, Math.min(1, channels[c][sampleIdx]));
+      sample = sample < 0 ? sample*0x8000 : sample*0x7FFF;
+      view.setInt16(pos, sample, true); pos += 2;
+    }
+    sampleIdx++;
+  }
+  return new Blob([view], {type:"audio/wav"});
+}
+
+async function renderTape(){
+  var voicedLayers = state.layers.filter(function(l){ return l.text.trim().length>0 && l.audioBuffer; });
+
+  var DURATION = 40; // seconds — baseline demo-length render
+  voicedLayers.forEach(function(l){
+    var effectiveLen = l.audioBuffer.duration / clampNum(l.speed, 0.25, 10);
+    DURATION = Math.max(DURATION, Math.min(effectiveLen + 2, 180)); // cap a single layer's influence at 3 minutes
+  });
+
+  var OfflineCtor = window.OfflineAudioContext || window.webkitOfflineAudioContext;
+  var octx = new OfflineCtor(2, Math.ceil(44100*DURATION), 44100);
+  var master = octx.createGain();
+  master.gain.value = 0.85;
+  master.connect(octx.destination);
+
+  // --- affirmation voice layers (spoken by the connected TTS server) ---
+  voicedLayers.forEach(function(l){
+    var src = octx.createBufferSource();
+    src.buffer = l.audioBuffer;
+    src.loop = true;
+    src.playbackRate.value = clampNum(l.speed, 0.25, 10);
+    var g = octx.createGain();
+    g.gain.value = clampNum(l.volume/100, 0, 1);
+    src.connect(g); g.connect(master);
+    src.start(0);
+    src.stop(DURATION);
+  });
+
+  // --- ambiance / frequencies / tones / music ---
+  if(state.overlays.length === 0 && voicedLayers.length === 0){
+    // silent-ish gentle base tone so the file isn't literally empty
+    var g0 = buildOverlayGraph(octx, "frequencies", "432 Hz", 0, DURATION);
+    g0.output.connect(master);
+  } else {
+    state.overlays.forEach(function(o){
+      var g = buildOverlayGraph(octx, o.category, o.name, 0, DURATION);
+      var trackGain = octx.createGain();
+      trackGain.gain.value = 1/Math.max(1,state.overlays.length) + 0.12;
+      g.output.connect(trackGain);
+      trackGain.connect(master);
+    });
+  }
+
+  var rendered = await octx.startRendering();
+  return bufferToWave(rendered);
+}
+
+var saveBtn = document.getElementById("save-tape-btn");
+var cdStage = document.getElementById("cd-stage");
+var cdStatus = document.getElementById("cd-status");
+var cdDownloadBtn = document.getElementById("cd-download-btn");
+var tapeBlobUrl = null;
+
+saveBtn.addEventListener("click", async function(){
+  var hasLayer = state.layers.some(function(l){ return l.text.trim().length>0; });
+  if(!hasLayer){
+    showToast("Add at least one affirmation layer before saving.");
+    return;
+  }
+  saveBtn.hidden = true;
+  cdStage.classList.add("show");
+  cdStatus.classList.add("show");
+  cdStatus.textContent = "Your download is almost ready…";
+
+  setTimeout(function(){
+    cdStatus.classList.remove("show");
+    setTimeout(function(){
+      cdStatus.textContent = "Almost there…";
+      cdStatus.classList.add("show");
+    }, 350);
+  }, 1600);
+
+  setTimeout(function(){ cdStage.classList.add("fast"); }, 2600);
+
+  try{
+    var blob = await renderTape();
+    tapeBlobUrl = URL.createObjectURL(blob);
+  }catch(err){
+    showToast("Something went wrong rendering your tape — please try again.");
+    saveBtn.hidden = false;
+    cdStage.classList.remove("show","fast");
+    return;
+  }
+
+  var minWait = new Promise(function(res){ setTimeout(res, 3400); });
+  await minWait;
+
+  cdStatus.classList.remove("show");
+  setTimeout(function(){
+    cdStatus.textContent = "Done!";
+    cdStatus.classList.add("show");
+    cdDownloadBtn.classList.add("show");
+  }, 350);
+
+  persistTape();
+});
+
+cdDownloadBtn.addEventListener("click", function(){
+  if(!tapeBlobUrl) return;
+  var a = document.createElement("a");
+  a.href = tapeBlobUrl;
+  a.download = "MyAffs-Tape.wav";
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  openDonateModal();
+});
+
+function persistTape(){
+  var savedLayers = state.layers.filter(function(l){return l.text.trim().length>0;});
+  var tapeRecord = {
+    id: randId(),
+    date: new Date().toISOString(),
+    layerCount: savedLayers.length,
+    overlayCount: state.overlays.length,
+    overlays: state.overlays.map(function(o){return o.name;}),
+    preview: savedLayers[0] ? savedLayers[0].text.trim().split(/\s+/).slice(0,6).join(" ") : ""
+  };
+  if(state.currentUser && !state.currentUser.isGuest){
+    var users = loadUsers();
+    var key = state.currentUser.username.toLowerCase();
+    if(users[key]){
+      users[key].tapes = users[key].tapes || [];
+      users[key].tapes.unshift(tapeRecord);
+      saveUsers(users);
+    }
+  } else {
+    state.guestTapes.unshift(tapeRecord);
+  }
+}
+
+function resetTapeBuilder(){
+  saveBtn.hidden = false;
+  cdStage.classList.remove("show","fast");
+  cdStatus.classList.remove("show");
+  cdDownloadBtn.classList.remove("show");
+  if(tapeBlobUrl){ URL.revokeObjectURL(tapeBlobUrl); tapeBlobUrl = null; }
+  state.overlays = [];
+  renderOverlayList();
+  resetLayersUI();
+  renderSummary();
+}
+
+/* ============================================================
+   DONATE MODAL
+   ============================================================ */
+var donateModal = document.getElementById("donate-modal");
+function openDonateModal(){
+  donateModal.hidden = false;
+  requestAnimationFrame(function(){ donateModal.classList.add("show"); });
+}
+function closeDonateModal(){
+  donateModal.classList.remove("show");
+  setTimeout(function(){ donateModal.hidden = true; }, 300);
+}
+document.getElementById("donate-later-btn").addEventListener("click", function(){
+  closeDonateModal();
+  resetTapeBuilder();
+  showView("app");
+  showToast("Your tape is saved. Start a new one anytime.");
+});
+
+/* ============================================================
+   PROFILE
+   ============================================================ */
+function renderProfile(){
+  if(!state.currentUser) return;
+  document.getElementById("profile-avatar").textContent = state.currentUser.isGuest ? "G" : state.currentUser.username.charAt(0).toUpperCase();
+  document.getElementById("profile-username").textContent = state.currentUser.isGuest ? "Guest session" : state.currentUser.username;
+
+  var tapesWrap = document.getElementById("profile-tapes");
+  tapesWrap.innerHTML = "";
+  var tapes = [];
+  if(state.currentUser.isGuest){
+    tapes = state.guestTapes;
+  } else {
+    var users = loadUsers();
+    var rec = users[state.currentUser.username.toLowerCase()];
+    tapes = (rec && rec.tapes) ? rec.tapes : [];
+  }
+
+  if(state.currentUser.isGuest){
+    tapesWrap.appendChild(el("p",{class:"tape-card", style:"background:#FBF3D9;", text:"Guest tapes only stick around for this session — sign up to keep them long-term."}));
+  }
+
+  if(tapes.length === 0){
+    tapesWrap.appendChild(el("div",{class:"empty-state", text:"No tapes yet — build your first one!"}));
+    return;
+  }
+  tapes.forEach(function(t){
+    var card = el("div", {class:"tape-card"});
+    var title = el("div", {class:"tname"});
+    title.textContent = t.preview ? ("\""+t.preview+"…\"") : "Untitled tape";
+    var meta = el("div", {class:"tmeta"});
+    var d = new Date(t.date);
+    meta.textContent = t.layerCount+" layer"+(t.layerCount===1?"":"s")+" · "+t.overlayCount+" sound"+(t.overlayCount===1?"":"s")+" · "+d.toLocaleDateString();
+    card.appendChild(title); card.appendChild(meta);
+    tapesWrap.appendChild(card);
+  });
+}
+
+/* ============================================================
+   AMBIENT VISUALS: sun glow + sparkles + rainbow position
+   ============================================================ */
+var sunGlow = document.getElementById("sun-glow");
+var rootStyle = document.documentElement.style;
+function onScroll(){
+  var y = window.scrollY;
+  var vh = window.innerHeight;
+  sunGlow.style.setProperty("--sx", (50 + Math.sin(y/900)*20) + "%");
+  sunGlow.style.setProperty("--sy", clampNum(10 + (y/ (document.body.scrollHeight-vh || 1))*30, 0, 60) + "%");
+  // sweep the glass shine highlight back and forth as the page scrolls
+  var sweep = (Math.sin(y/380) * 90) + "%";
+  rootStyle.setProperty("--shine-x", sweep);
+}
+window.addEventListener("scroll", function(){ requestAnimationFrame(onScroll); }, {passive:true});
+onScroll();
+
+function spawnSparkles(){
+  var host = document.getElementById("sparkles");
+  var count = window.innerWidth < 640 ? 14 : 26;
+  for(var i=0;i<count;i++){
+    var s = el("span", {class:"sparkle"});
+    s.style.left = Math.random()*100 + "vw";
+    s.style.top = Math.random()*100 + "vh";
+    s.style.animationDuration = (5+Math.random()*7)+"s";
+    s.style.animationDelay = (Math.random()*8)+"s";
+    s.style.width = s.style.height = (3+Math.random()*4)+"px";
+    host.appendChild(s);
+  }
+}
+spawnSparkles();
+
+/* rainbow streak placement relative to tutorial section */
+window.addEventListener("load", function(){
+  var tut = document.getElementById("tutorial");
+  var streak = document.getElementById("rainbow-streak");
+  if(tut){
+    var landing = document.getElementById("view-landing");
+    landing.style.position = "relative";
+    landing.insertBefore(streak, tut);
+    streak.style.top = "auto";
+    streak.style.position = "absolute";
+  }
+});
+
+/* ============================================================
+   INIT
+   ============================================================ */
+resetLayersUI();
+renderOverlayList();
+renderSummary();
+syncNav();
+showView("landing");
+
+})();
+</script>
+</body>
+</html>
